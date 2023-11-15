@@ -1,33 +1,25 @@
 import React, { useState } from "react";
-import axios from "axios";
-
-import "./Weather.css";
 import WeatherInfo from "./WeatherInfo";
 import WeatherForecast from "./WeatherForecast";
-import App from "./App";
+import axios from "axios";
+import "./Weather.css";
 
 export default function Weather(props) {
-  const [weatherData, setWeatherData] = useState({ loading: false });
+  const [weatherData, setWeatherData] = useState({ ready: false });
   const [city, setCity] = useState(props.defaultCity);
 
-  function handleData(response) {
+  function handleResponse(response) {
     setWeatherData({
-      loading: true,
-      coordinates: response.data.coord,
-      city: response.data.name,
-      date: new Date(response.data.dt * 1000),
-      description: response.data.weather[0].description,
-      icon: response.data.weather[0].icon,
-      temperature: response.data.main.temp,
-      humidity: response.data.main.humidity,
-      windspeed: response.data.wind.speed,
+      ready: true,
+      coordinates: response.data.coordinates,
+      temperature: response.data.temperature.current,
+      humidity: response.data.temperature.humidity,
+      date: new Date(response.data.time * 1000),
+      description: response.data.condition.description,
+      icon: response.data.condition.icon,
+      wind: response.data.wind.speed,
+      city: response.data.city,
     });
-  }
-
-  function search() {
-    let apiKey = "57b2c40fdae71a6ba41d72685e3226e2";
-    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-    axios.get(apiUrl).then(handleData);
   }
 
   function handleSubmit(event) {
@@ -39,34 +31,61 @@ export default function Weather(props) {
     setCity(event.target.value);
   }
 
-  if (weatherData.loading) {
+  function search() {
+    const apiKey = "eac360db5fc86ft86450f3693e73o43f";
+    let apiUrl = `https://api.shecodes.io/weather/v1/current?query=${city}&key=${apiKey}&units=metric`;
+
+    axios.get(apiUrl).then(handleResponse);
+  }
+
+  if (weatherData.ready) {
     return (
       <div className="Weather">
+        <a
+          href="https://www.shecodes.io/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src="/images/logo.png" className="logo" alt="SheCodes Logo" />
+        </a>
         <form onSubmit={handleSubmit}>
           <div className="row">
-            <div className="col-9">
+            <div className="col-9 ">
               <input
-                type="text"
-                placeholder="Enter city"
-                autoFocus="on"
-                className="form-control"
+                type="search"
+                placeholder="Enter a city.."
+                className="form-control search-input"
                 onChange={handleCityChange}
               />
             </div>
-            <div className="col-3">
+            <div className="col-3 p-0">
               <input
                 type="submit"
                 value="Search"
-                className="search-button btn btn-light btn-outline-scondary w-100"
+                className="btn btn-primary w-100"
               />
             </div>
           </div>
         </form>
         <WeatherInfo data={weatherData} />
-        <WeatherForecast coordinates={weatherData.coordinates} />
+        <WeatherForecast
+          coordinates={weatherData.coordinates}
+          city={weatherData.city}
+        />
+        <footer>
+          This project was coded by Eugenia Brunetti Ehnimb and is
+          <a
+            href="https://github.com/eugesuri/Weather-Search-Engine"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            open-sourced on GitHub
+          </a>{" "}
+        </footer>
       </div>
     );
   } else {
     search();
+    return "Loading...";
   }
 }
