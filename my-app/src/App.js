@@ -7,7 +7,10 @@ export default function App() {
       <footer>
         This project was coded by <em> Eugenia Brunetti Ehnimb</em>
         {""} and is open sourced on {""}
-        <a href="https://github.com/eugesuri/Weather-React-4" target="_blank">
+        <a
+          href="https://github.com/eugesuri/Weather-Search-Engine"
+          target="_blank"
+        >
           Github{" "}
         </a>
         🌸
