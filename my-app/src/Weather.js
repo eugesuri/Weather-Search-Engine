@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Vortex } from "react-loader-spinner";
+
 import "./Weather.css";
 import WeatherInfo from "./WeatherInfo";
 import WeatherForecast from "./WeatherForecast";
+import App from "./App";
 
 export default function Weather(props) {
   const [weatherData, setWeatherData] = useState({ loading: false });
@@ -67,17 +68,5 @@ export default function Weather(props) {
     );
   } else {
     search();
-
-    return (
-      <Vortex
-        visible={true}
-        height="120"
-        width="120"
-        ariaLabel="vortex-loading"
-        wrapperStyle={{}}
-        wrapperClass="vortex-wrapper"
-        colors={["red", "green", "blue", "yellow", "orange", "purple"]}
-      />
-    );
   }
 }
